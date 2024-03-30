@@ -1,18 +1,13 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
-name: Go
+name: Publish package
 
 on:
-  pull_request:
+  push:
     branches: ["main"]
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
@@ -23,3 +18,8 @@ jobs:
 
       - name: Test
         run: go test -v ./...
+
+      - name: Github Tag with semantic versioning
+        uses: hennejg/github-tag-action@v4.3.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
