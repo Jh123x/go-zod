@@ -1,2 +1,3 @@
-# go-zod
- A Code generation tool to generate go-zod validation code.
+# Go-Zod
+
+The function aims to be similar to [Zod](https://zod.dev/ "Zod") but for Golang.
