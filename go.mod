@@ -1,6 +1,6 @@
 module github.com/Jh123x/go-zod
 
-go 1.20.0
+go 1.20
 
 require (
 	github.com/Jh123x/go-validate v0.0.0-20240322145334-79b7a7c69b3f
