@@ -7,9 +7,13 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
@@ -21,7 +25,7 @@ jobs:
       - name: Test
         run: go test -v ./...
 
-      - name: Github Tag with semantic versioning
-        uses: hennejg/github-tag-action@v4.3.1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
