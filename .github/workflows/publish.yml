@@ -28,4 +28,5 @@ jobs:
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@v1
         env:
+          WITH_V: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
