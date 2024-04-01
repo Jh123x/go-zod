@@ -13,6 +13,10 @@ func IsValidSchema(schema any, fieldType string) bool {
 	switch schema.(type) {
 	case *StringSchema:
 		return fieldType == "string"
+	case *IntSchema:
+		return fieldType == "int"
+	case *BoolSchema:
+		return fieldType == "bool"
 	default:
 		return false
 	}

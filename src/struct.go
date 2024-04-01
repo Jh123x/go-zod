@@ -35,6 +35,14 @@ func (s *StructSchema[T]) Parse(val T) error {
 			if err := schema.Parse(fieldValue.Interface().(string)); err != nil {
 				return err
 			}
+		case *IntSchema:
+			if err := schema.Parse(int(fieldValue.Int())); err != nil {
+				return err
+			}
+		case *BoolSchema:
+			if err := schema.Parse(fieldValue.Bool()); err != nil {
+				return err
+			}
 		default:
 			if err := reflect.ValueOf(schema).MethodByName("Parse").Call([]reflect.Value{fieldValue}); err != nil {
 				val := err[0]

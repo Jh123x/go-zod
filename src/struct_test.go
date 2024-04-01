@@ -9,7 +9,9 @@ import (
 )
 
 type TestStruct2 struct {
-	EmailVal string
+	EmailVal  string
+	IsInvalid bool
+	Number    int
 }
 
 type TestStruct struct {
@@ -71,6 +73,12 @@ func TestStructSchema(t *testing.T) {
 				options.VIsNotDefault[string](),
 				options.VIsValidEmail,
 			),
+			"IsInvalid": NewBoolSchema(
+				options.VIsDefault[bool](),
+			),
+			"Number": NewIntSchema(
+				options.VIsDefault[int](),
+			),
 		},
 	)
 	assert.Nil(t, err)
@@ -89,9 +97,48 @@ func TestStructSchema(t *testing.T) {
 			},
 			value: TestStruct{
 				JsonVal: `{"key": "value"}`,
-				Struct2: TestStruct2{EmailVal: "email@email.com"},
+				Struct2: TestStruct2{
+					EmailVal:  "email@email.com",
+					Number:    0,
+					IsInvalid: false,
+				},
 			},
 			expectedErr: nil,
+		},
+
+		"invalid int should error": {
+			objSchema: map[string]any{
+				"JsonVal": NewStringSchema(
+					options.VIsNotDefault[string](),
+					options.VIsValidJson,
+				),
+				"Struct2": testsS,
+			},
+			value: TestStruct{
+				JsonVal: `{"key": "value"}`,
+				Struct2: TestStruct2{
+					EmailVal: "email@email.com",
+					Number:   100,
+				},
+			},
+			expectedErr: errs.IsDefaultErr,
+		},
+		"invalid bool should error": {
+			objSchema: map[string]any{
+				"JsonVal": NewStringSchema(
+					options.VIsNotDefault[string](),
+					options.VIsValidJson,
+				),
+				"Struct2": testsS,
+			},
+			value: TestStruct{
+				JsonVal: `{"key": "value"}`,
+				Struct2: TestStruct2{
+					EmailVal:  "email@email.com",
+					IsInvalid: true,
+				},
+			},
+			expectedErr: errs.IsDefaultErr,
 		},
 		"invalid string schema match should throw error": {
 			objSchema: map[string]any{
@@ -103,7 +150,9 @@ func TestStructSchema(t *testing.T) {
 			},
 			value: TestStruct{
 				JsonVal: `{"key": "value"`, // Invalid json
-				Struct2: TestStruct2{EmailVal: "email@email.com"},
+				Struct2: TestStruct2{
+					EmailVal: "email@email.com",
+				},
 			},
 			expectedErr: errs.InvalidJsonError,
 		},
@@ -117,7 +166,9 @@ func TestStructSchema(t *testing.T) {
 			},
 			value: TestStruct{
 				JsonVal: `{"key": "value"}`,
-				Struct2: TestStruct2{EmailVal: "not an email"}, // Invalid email
+				Struct2: TestStruct2{
+					EmailVal: "not an email",
+				}, // Invalid email
 			},
 			expectedErr: errs.InvalidEmailError,
 		},
