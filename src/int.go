@@ -10,7 +10,7 @@ type IntSchema struct {
 }
 
 func NewIntSchema(constraints ...ttypes.ValTest[int]) *IntSchema {
-	return &IntSchema{constraints: options.VAnd[int](constraints...)}
+	return &IntSchema{constraints: options.VAnd(constraints...)}
 }
 
 func (i *IntSchema) Compose(fileName string, schema *IntSchema) *IntSchema {
